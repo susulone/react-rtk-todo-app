@@ -2,7 +2,7 @@ import { useState } from "react";
 
 // RTK
 import { useAppDispatch } from "../../app/hooks";
-import { toggleTaskComplete, editTaskDescription } from "./taskSlice";
+import { toggleTaskComplete, editTaskDescription, deleteTask } from "./taskSlice";
 
 // Components
 import { IconButton } from "../../common/components/IconButton";
@@ -60,6 +60,20 @@ export const TaskCard = ({ id, task, completed, createdAt, editedAt }: Task) => 
     }
   };
 
+  const handleTaskDelete = () => {
+    try {
+      setRequestStatus("pending");
+      dispatch(
+        deleteTask({ id: id })
+      ).unwrap();
+    } catch (err) {
+        console.error("Failed to delete the task", err);
+    } finally {
+        setRequestStatus("idle");
+        console.log(requestStatus);
+    }
+  };
+
   return (
     <Stack direction="horizontal" className="task">
       <FormCheck
@@ -97,7 +111,7 @@ export const TaskCard = ({ id, task, completed, createdAt, editedAt }: Task) => 
       )}
       <IconButton
         iconName={"Delete"}
-        handleOnClick={() => ""}
+        handleOnClick={handleTaskDelete}
       />
     </Stack>
   );

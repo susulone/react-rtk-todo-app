@@ -75,6 +75,19 @@ export const editTaskDescription = createAsyncThunk(
   }
 );
 
+export const deleteTask = createAsyncThunk(
+  "tasks/deleteTask",
+  async (initialTask: Partial<Task>): Promise<Partial<Task> | string> => {
+    const { id } = initialTask;
+      const response = await axios.delete(`${TASKS_URL}/${id}`);
+      console.log("Delete", response)
+
+      if (response?.status === 200) return initialTask;
+
+      return `${response?.status}: ${response?.statusText}`;
+  }
+);
+
 export const taskSlice = createSlice({
   name: "tasks",
   initialState,
@@ -122,6 +135,24 @@ export const taskSlice = createSlice({
       const { id } = action.payload;
       const tasks = state.tasks.filter((task) => task.id !== id);
       state.tasks = [...tasks, action.payload];
+    });
+    builder.addCase(deleteTask.fulfilled, (state, action) => {
+      if (typeof action.payload === "object") {
+        const { id } = action.payload;
+        const tasks = state.tasks.filter((task) => task.id !== id);
+        state.tasks = tasks;
+      }
+      if (typeof action.payload === "string") {
+        console.log(action.payload)
+        // state.status = "failed";
+        // state.error = action.payload;
+      }
+    });
+    builder.addCase(deleteTask.rejected, (state, {error}) => {
+      console.log("deleteTask rejected", error);
+      state.status = "failed";
+      state.error = error.message!;
+
     });
   },
 });
