@@ -2,7 +2,7 @@ import { useState } from "react";
 
 // RTK
 import { useAppDispatch } from "../../app/hooks";
-import { toggleTaskComplete } from "./taskSlice";
+import { toggleTaskComplete, editTaskDescription } from "./taskSlice";
 
 // Components
 import { IconButton } from "../../common/components/IconButton";
@@ -18,6 +18,30 @@ export const TaskCard = ({ id, task, completed, createdAt, editedAt }: Task) => 
   const [requestStatus, setRequestStatus] = useState("idle");
   const [editedTaskText, setEditedTaskText] = useState(task);
   console.log("Task card rendered");
+
+    const canSave = Boolean(editedTaskText) && requestStatus === "idle";
+
+    const handleTaskEdit = () => {
+      if (canSave) {
+        try {
+          setRequestStatus("pending");
+          dispatch(
+            editTaskDescription({
+              id: id,
+              task: editedTaskText,
+              completed: completed,
+              createdAt: createdAt,
+              editedAt: new Date().toLocaleDateString("en-US"),
+            })
+          ).unwrap();
+        } catch (err) {
+            console.error("Failed to save the task", err);
+        } finally {
+            setRequestStatus("idle");
+            console.log(requestStatus);
+        }
+      }
+    };
 
   const handleTaskCompleted = () => {
     try {
@@ -56,7 +80,10 @@ export const TaskCard = ({ id, task, completed, createdAt, editedAt }: Task) => 
           </Stack>
           <IconButton
             iconName={"Save"}
-            handleOnClick={() => ""}
+            handleOnClick={() => {
+              handleTaskEdit();
+              setEditMode(false);
+            }}
           />
         </>
       ) : (

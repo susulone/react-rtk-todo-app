@@ -30,34 +30,49 @@ export const fetchTasks = createAsyncThunk("tasks/fetchTasks", async () => {
 });
 
 export const addTask = createAsyncThunk(
-    "tasks/addTask",
-    async (initialTask: Task) => {
-        try {
-            const response = await axios.post(TASKS_URL, initialTask);
-            return response.data;
-        } catch (err) {
-            if (err instanceof Error) {
-                return err.message;
-            }
-        }
+  "tasks/addTask",
+  async (initialTask: Task) => {
+    try {
+      const response = await axios.post(TASKS_URL, initialTask);
+      return response.data;
+    } catch (err) {
+      if (err instanceof Error) {
+        return err.message;
+      }
     }
+  }
 );
 
 export const toggleTaskComplete = createAsyncThunk(
-    "tasks/toggleTaskComplete",
-    async (initialTask: Partial<Task>) => {
-        const { id, completed } = initialTask;
-        try {
-            const response = await axios.patch(`${TASKS_URL}/${id}`, {
-                completed: completed,
-            });
-            return response.data;
-        } catch (err) {
-            if (err instanceof Error) {
-                return err.message;
-            }
-        }
+  "tasks/toggleTaskComplete",
+  async (initialTask: Partial<Task>) => {
+    const { id, completed } = initialTask;
+    try {
+      const response = await axios.patch(`${TASKS_URL}/${id}`, {
+        completed: completed,
+      });
+      return response.data;
+    } catch (err) {
+      if (err instanceof Error) {
+        return err.message;
+      }
     }
+  }
+);
+
+export const editTaskDescription = createAsyncThunk(
+  "tasks/editTaskDescription",
+  async (initialTask: Partial<Task>) => {
+    const { id } = initialTask;
+    try {
+      const response = await axios.put(`${TASKS_URL}/${id}`, initialTask);
+      return response.data;
+    } catch (err) {
+      if (err instanceof Error) {
+        return err.message;
+      }
+    }
+  }
 );
 
 export const taskSlice = createSlice({
@@ -89,6 +104,16 @@ export const taskSlice = createSlice({
       state.tasks.push(action.payload);
     });
     builder.addCase(toggleTaskComplete.fulfilled, (state, action) => {
+      if (!action.payload?.id) {
+        console.log("Update could not complete");
+        console.log(action.payload);
+        return;
+      }
+      const { id } = action.payload;
+      const tasks = state.tasks.filter((task) => task.id !== id);
+      state.tasks = [...tasks, action.payload];
+    });
+    builder.addCase(editTaskDescription.fulfilled, (state, action) => {
       if (!action.payload?.id) {
         console.log("Update could not complete");
         console.log(action.payload);
