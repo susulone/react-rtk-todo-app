@@ -1,5 +1,6 @@
 // Components
 import { Header } from "../common/components/Header";
+import { Footer } from "../common/components/Footer";
 
 // Styling
 import { Container } from "react-bootstrap";
@@ -10,6 +11,7 @@ function App() {
   return (
     <Container fluid>
       <Header />
+      <Footer />
     </Container>
   );
 }
