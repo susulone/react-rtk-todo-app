@@ -27,3 +27,31 @@
     text-align: center;
     margin-block-start: 18px;
 }
+
+#loader {
+    color: var(--accent-color);
+    margin-block-start: 2.5rem;
+    margin-inline: auto;
+    animation: rotating 4.5s infinite;
+    animation-timing-function: linear;
+    transform-origin: center;
+    transform-box: fill-box;
+}
+
+@keyframes rotating {
+    0% {
+        transform: rotate(0deg);
+    }
+    50% {
+        transform: rotate(180deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@media (min-width: 55em) {
+    #loader {
+        grid-column: 1 / span 2;
+    }
+}
