@@ -43,6 +43,23 @@ export const addTask = createAsyncThunk(
     }
 );
 
+export const toggleTaskComplete = createAsyncThunk(
+    "tasks/toggleTaskComplete",
+    async (initialTask: Partial<Task>) => {
+        const { id, completed } = initialTask;
+        try {
+            const response = await axios.patch(`${TASKS_URL}/${id}`, {
+                completed: completed,
+            });
+            return response.data;
+        } catch (err) {
+            if (err instanceof Error) {
+                return err.message;
+            }
+        }
+    }
+);
+
 export const taskSlice = createSlice({
   name: "tasks",
   initialState,
@@ -70,6 +87,16 @@ export const taskSlice = createSlice({
     builder.addCase(addTask.fulfilled, (state, action) => {
       console.log(action.payload);
       state.tasks.push(action.payload);
+    });
+    builder.addCase(toggleTaskComplete.fulfilled, (state, action) => {
+      if (!action.payload?.id) {
+        console.log("Update could not complete");
+        console.log(action.payload);
+        return;
+      }
+      const { id } = action.payload;
+      const tasks = state.tasks.filter((task) => task.id !== id);
+      state.tasks = [...tasks, action.payload];
     });
   },
 });

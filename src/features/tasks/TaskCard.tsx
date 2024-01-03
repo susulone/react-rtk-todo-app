@@ -2,6 +2,7 @@ import { useState } from "react";
 
 // RTK
 import { useAppDispatch } from "../../app/hooks";
+import { toggleTaskComplete } from "./taskSlice";
 
 // Components
 import { IconButton } from "../../common/components/IconButton";
@@ -18,6 +19,23 @@ export const TaskCard = ({ id, task, completed, createdAt, editedAt }: Task) => 
   const [editedTaskText, setEditedTaskText] = useState(task);
   console.log("Task card rendered");
 
+  const handleTaskCompleted = () => {
+    try {
+      setRequestStatus("pending");
+      dispatch(
+        toggleTaskComplete({
+          id: id,
+          completed: !completed,
+        })
+      ).unwrap();
+    } catch (err) {
+        console.error("Failed to update the task", err);
+    } finally {
+        setRequestStatus("idle");
+        console.log(requestStatus);
+    }
+  };
+
   return (
     <Stack direction="horizontal" className="task">
       <FormCheck
@@ -25,6 +43,7 @@ export const TaskCard = ({ id, task, completed, createdAt, editedAt }: Task) => 
         type="checkbox"
         defaultChecked={completed}
         id={id}
+        onChange={handleTaskCompleted}
       />
       {editMode ? (
         <>
@@ -45,7 +64,7 @@ export const TaskCard = ({ id, task, completed, createdAt, editedAt }: Task) => 
           <Col>{task}</Col>
           <IconButton
             iconName={"Edit"}
-            handleOnClick={() => ""}
+            handleOnClick={() => setEditMode(true)}
           />
         </>
       )}
