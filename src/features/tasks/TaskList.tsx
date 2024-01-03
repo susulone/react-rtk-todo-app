@@ -1,5 +1,5 @@
 // Components
-import { LoaderWheel } from '../../common/components/LoaderWheel'
+import { LoaderWheel } from "../../common/components/LoaderWheel";
 
 // Styling
 import "./styles.css";
