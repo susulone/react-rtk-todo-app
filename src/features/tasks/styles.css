@@ -7,17 +7,42 @@
     height: 75%;
 
     display: grid;
-    grid-template-columns: 1fr;
-    row-gap: 8px;
-    padding: 24px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-rows: auto;
+    gap: 12px;
 
+    padding: 24px;
+    align-content: start;
     overflow: scroll;
 }
 
+/* TAKS ITEM */
+.task {
+    background-color: rgba(255, 0, 0, 0.2);
+    width: 100%;
+    min-width: 300px;
+    height: fit-content;
+    margin-inline: auto;
+    padding: 24px;
+    border-radius: 8px;
+}
+
+.task:has(input[type="checkbox"]:checked) {
+    background-color: rgba(144, 238, 144, 0.4);
+}
+
+input[type="checkbox"].hidden {
+    opacity: 0;
+}
+
+.task button {
+    background-color: transparent;
+    border: none;
+    color: black;
+}
+
 @media (min-width: 55em) {
-    #task-list {
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: repeat(10, 1fr);
-        overflow: scroll;
+    #errorIndicator {
+        grid-column: 1 / span 2;
     }
 }
