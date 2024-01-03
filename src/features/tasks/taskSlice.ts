@@ -29,6 +29,20 @@ export const fetchTasks = createAsyncThunk("tasks/fetchTasks", async () => {
   return response.data;
 });
 
+export const addTask = createAsyncThunk(
+    "tasks/addTask",
+    async (initialTask: Task) => {
+        try {
+            const response = await axios.post(TASKS_URL, initialTask);
+            return response.data;
+        } catch (err) {
+            if (err instanceof Error) {
+                return err.message;
+            }
+        }
+    }
+);
+
 export const taskSlice = createSlice({
   name: "tasks",
   initialState,
@@ -52,6 +66,10 @@ export const taskSlice = createSlice({
       console.log("fetchTasks rejected", error);
       state.status = "failed";
       state.error = `Failed to fetch tasks – ${error.message!}`;
+    });
+    builder.addCase(addTask.fulfilled, (state, action) => {
+      console.log(action.payload);
+      state.tasks.push(action.payload);
     });
   },
 });

@@ -41,8 +41,31 @@ input[type="checkbox"].hidden {
     color: black;
 }
 
+/* ADD TASK */
+#add-form {
+    width: fit-content;
+    margin-inline: auto;
+    justify-content: center;
+}
+
+#add-form label {
+    position: absolute;
+    left: -1000rem;
+}
+
+#add-form input {
+    min-width: 250px;
+}
+
+#add-form button {
+    align-self: flex-start;
+}
+
 @media (min-width: 55em) {
     #errorIndicator {
         grid-column: 1 / span 2;
+    }
+    #add-form input {
+        width: 350px;
     }
 }

@@ -1,3 +1,6 @@
+// Components
+import { AddTask } from "../../features/tasks/AddTask";
+
 // Styling
 import "./styles.css";
 
@@ -17,6 +20,7 @@ export const Footer = () => {
 
   return (
     <footer id="footer">
+      <AddTask />
       <p id="footer-content">
         <span>&copy; </span>
         {projectLifeTime()} Suvi Sulonen
